@@ -1,0 +1,382 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Study Journey application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user"
+        },
+        "studyPlanId": {
+          "type": "string",
+          "description": "Reference to StudyPlan. (Relationship: User 1:1 StudyPlan)"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "username"
+      ]
+    },
+    "StudyPlan": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "StudyPlan",
+      "type": "object",
+      "description": "Represents a personalized study plan for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the study plan."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:1 StudyPlan)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The study plans name"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Start date of the study plan.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "End date of the study plan.",
+          "format": "date-time"
+        },
+        "goal": {
+          "type": "string",
+          "description": "Overall goal of the study plan."
+        },
+        "topicIds": {
+          "type": "array",
+          "description": "References to Topics. (Relationship: StudyPlan 1:N Topic)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "startDate",
+        "endDate",
+        "goal"
+      ]
+    },
+    "Topic": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Topic",
+      "type": "object",
+      "description": "Represents a topic within a study plan.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the topic."
+        },
+        "studyPlanId": {
+          "type": "string",
+          "description": "Reference to StudyPlan. (Relationship: StudyPlan 1:N Topic)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the topic."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the topic."
+        },
+        "contentUrl": {
+          "type": "string",
+          "description": "URL to the learning content for this topic.",
+          "format": "uri"
+        },
+        "practiceTestIds": {
+          "type": "array",
+          "description": "References to PracticeTests. (Relationship: Topic 1:N PracticeTest)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "studyPlanId",
+        "name",
+        "description"
+      ]
+    },
+    "PracticeTest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PracticeTest",
+      "type": "object",
+      "description": "Represents a practice test for a specific topic.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the practice test."
+        },
+        "topicId": {
+          "type": "string",
+          "description": "Reference to Topic. (Relationship: Topic 1:N PracticeTest)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the practice test."
+        },
+        "questions": {
+          "type": "array",
+          "description": "References to Questions. (Relationship: PracticeTest 1:N Question)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "topicId",
+        "name"
+      ]
+    },
+    "Question": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Question",
+      "type": "object",
+      "description": "Represents a question within a practice test.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the question."
+        },
+        "practiceTestId": {
+          "type": "string",
+          "description": "Reference to PracticeTest. (Relationship: PracticeTest 1:N Question)"
+        },
+        "text": {
+          "type": "string",
+          "description": "The text of the question."
+        },
+        "options": {
+          "type": "array",
+          "description": "An array of possible answers.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "correctAnswerIndex": {
+          "type": "number",
+          "description": "The index of the correct answer in the options array."
+        }
+      },
+      "required": [
+        "id",
+        "practiceTestId",
+        "text",
+        "options",
+        "correctAnswerIndex"
+      ]
+    },
+    "WeeklyReport": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WeeklyReport",
+      "type": "object",
+      "description": "Represents a weekly progress report for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the report."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N WeeklyReport)"
+        },
+        "weekStartDate": {
+          "type": "string",
+          "description": "Start date of the week the report covers.",
+          "format": "date-time"
+        },
+        "weekEndDate": {
+          "type": "string",
+          "description": "End date of the week the report covers.",
+          "format": "date-time"
+        },
+        "reportContent": {
+          "type": "string",
+          "description": "The actual content of the report, potentially in a structured format like JSON or Markdown."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "weekStartDate",
+        "weekEndDate",
+        "reportContent"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Collection of user profiles.  Access is restricted to the user themselves.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/studyPlans/{studyPlanId}",
+        "definition": {
+          "entityName": "StudyPlan",
+          "schema": {
+            "$ref": "#/backend/entities/StudyPlan"
+          },
+          "description": "Collection of study plans owned by a specific user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "studyPlanId",
+              "description": "The unique identifier for the study plan."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/studyPlans/{studyPlanId}/topics/{topicId}",
+        "definition": {
+          "entityName": "Topic",
+          "schema": {
+            "$ref": "#/backend/entities/Topic"
+          },
+          "description": "Collection of topics within a specific study plan.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "studyPlanId",
+              "description": "The unique identifier for the study plan."
+            },
+            {
+              "name": "topicId",
+              "description": "The unique identifier for the topic."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/studyPlans/{studyPlanId}/topics/{topicId}/practiceTests/{practiceTestId}",
+        "definition": {
+          "entityName": "PracticeTest",
+          "schema": {
+            "$ref": "#/backend/entities/PracticeTest"
+          },
+          "description": "Collection of practice tests for a specific topic.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "studyPlanId",
+              "description": "The unique identifier for the study plan."
+            },
+            {
+              "name": "topicId",
+              "description": "The unique identifier for the topic."
+            },
+            {
+              "name": "practiceTestId",
+              "description": "The unique identifier for the practice test."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/studyPlans/{studyPlanId}/topics/{topicId}/practiceTests/{practiceTestId}/questions/{questionId}",
+        "definition": {
+          "entityName": "Question",
+          "schema": {
+            "$ref": "#/backend/entities/Question"
+          },
+          "description": "Collection of questions within a specific practice test.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "studyPlanId",
+              "description": "The unique identifier for the study plan."
+            },
+            {
+              "name": "topicId",
+              "description": "The unique identifier for the topic."
+            },
+            {
+              "name": "practiceTestId",
+              "description": "The unique identifier for the practice test."
+            },
+            {
+              "name": "questionId",
+              "description": "The unique identifier for the question."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/weeklyReports/{weeklyReportId}",
+        "definition": {
+          "entityName": "WeeklyReport",
+          "schema": {
+            "$ref": "#/backend/entities/WeeklyReport"
+          },
+          "description": "Collection of weekly progress reports for a user.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "weeklyReportId",
+              "description": "The unique identifier for the weekly report."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "Given the application's focus on personalized study plans, AI-driven content generation, and progress tracking, the Firestore structure is designed to facilitate efficient data retrieval and secure access control. Since the user requested the app to be published publically, user-owned data and shared resources needs to be clearly segregated to avoid mixing public and private data. The design employs path-based ownership for user-specific data and denormalization to ensure authorization independence.\n\n**Authorization Independence:**\n\n*   The structure avoids hierarchical authorization dependencies by storing authorization information directly within the documents when needed. For instance, if Topics were to include details about associated PracticeTests, we would denormalize the StudyPlan or User information into the Topic documents instead of relying on `get()` calls to the parent documents.\n\n**QAPs (Rules are not Filters):**\n\n*   **Segregation**: User-specific data (StudyPlans, Topics, PracticeTests, Questions, WeeklyReports) are stored under the `/users/{userId}` path. This segregation ensures that listing operations can be secured by simply checking `request.auth.uid == userId`.\n\nThis structure balances data locality for common operations with the need for scalable and secure access control."
+  }
+}
